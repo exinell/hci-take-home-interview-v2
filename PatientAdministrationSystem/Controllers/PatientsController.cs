@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using PatientAdministrationSystem.Application.Dtos;
 using PatientAdministrationSystem.Application.Entities;
 using PatientAdministrationSystem.Application.Services.Interfaces;
