@@ -27,6 +27,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IPatientsRepository, PatientsRepository>();
 builder.Services.AddScoped<IPatientsService, PatientsService>();
+builder.Services.AddScoped<IHospitalService, HospitalService>();
 
 
 builder.Services.AddDbContext<HciDataContext>(options =>

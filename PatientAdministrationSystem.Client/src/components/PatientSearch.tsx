@@ -3,6 +3,7 @@ import { getPatients } from '../services/api';
 import { TextField, List, ListItem, ListItemText, CircularProgress, Container, Paper, Alert, Button, Typography } from '@mui/material';
 import { Patient } from '../types/Patient';
 import { ApiResponse } from '../types/ApiResponse';
+import { MESSAGES } from '../constants/general';
 
 interface PatientSearchProps {
     onSelectPatient: (patientId: string) => void;
@@ -43,7 +44,7 @@ const PatientSearch: React.FC<PatientSearchProps> = ({ onSelectPatient }) => {
                 totalRecords: response.totalRecords || 0,
             };
         } catch (error) {
-            setError("Failed to fetch patients. Please try again later.");
+            setError(MESSAGES.errorFetching);
         } finally {
             setLoading(false);
         }
@@ -69,10 +70,10 @@ const PatientSearch: React.FC<PatientSearchProps> = ({ onSelectPatient }) => {
     return (
         <Container>
             <Typography variant="h5" component="h2" gutterBottom>
-                Search for a Patient
+                {MESSAGES.searchTitle}
             </Typography>
             <TextField
-                label="Search patient by name"
+                label={MESSAGES.searchLabel}
                 variant="outlined"
                 fullWidth
                 value={name}
@@ -83,6 +84,8 @@ const PatientSearch: React.FC<PatientSearchProps> = ({ onSelectPatient }) => {
                 <CircularProgress />
             ) : error ? (
                 <Alert severity="error">{error}</Alert>
+            ) : patients.length === 0 && name ? (
+                <Alert severity="info">{MESSAGES.noPatientsFound}</Alert>
             ) : (
                 <List component={Paper}>
                     {patients.map((patient) => (
@@ -93,7 +96,7 @@ const PatientSearch: React.FC<PatientSearchProps> = ({ onSelectPatient }) => {
                 </List>
             )}
             {page * pageSize < totalRecords && !loading && (
-                <Button onClick={() => setPage((prevPage) => prevPage + 1)}>Load More</Button>
+                <Button onClick={() => setPage((prevPage) => prevPage + 1)}>{MESSAGES.loadMore}</Button>
             )}
             {loading && page > 1 && <CircularProgress />}
         </Container>

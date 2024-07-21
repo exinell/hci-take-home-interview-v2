@@ -3,6 +3,7 @@ import { getPatientVisits } from '../services/api';
 import { List, ListItem, ListItemText, CircularProgress, Container, Paper, Typography, Alert, Button } from '@mui/material';
 import { Visit } from '../types/Visit';
 import { ApiResponse } from '../types/ApiResponse';
+import { MESSAGES } from '../constants/general';
 
 interface VisitListProps {
     patientId: string;
@@ -28,10 +29,10 @@ const VisitList: React.FC<VisitListProps> = ({ patientId }) => {
             }
             setTotalRecords(response.totalRecords || 0);
             if (response.data.length === 0 && page === 1) {
-                setError("No visits found for this patient.");
+                setError(MESSAGES.noVisitsFound);
             }
         } catch (error) {
-            setError("Failed to fetch visits. Please try again later.");
+            setError(MESSAGES.errorFetchingVisits);
         } finally {
             setLoading(false);
         }
@@ -50,7 +51,7 @@ const VisitList: React.FC<VisitListProps> = ({ patientId }) => {
     return (
         <Container>
             <Typography variant="h5" component="h3" gutterBottom>
-                Visits
+                {MESSAGES.visitsTitle}
             </Typography>
             {loading && page === 1 ? (
                 <CircularProgress />
@@ -66,7 +67,7 @@ const VisitList: React.FC<VisitListProps> = ({ patientId }) => {
                 </List>
             )}
             {page * pageSize < totalRecords && !loading && (
-                <Button onClick={() => setPage((prevPage) => prevPage + 1)}>Load More</Button>
+                <Button onClick={() => setPage((prevPage) => prevPage + 1)}>{MESSAGES.loadMore}</Button>
             )}
             {loading && page > 1 && <CircularProgress />}
         </Container>

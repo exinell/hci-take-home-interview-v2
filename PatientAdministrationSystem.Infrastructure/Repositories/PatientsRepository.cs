@@ -13,10 +13,11 @@ public class PatientsRepository : EntityRepository<PatientEntity, Guid>, IPatien
         _context = context;
     }
 
-    public async Task<(IEnumerable<PatientEntity>, int)> SearchPatientsAsync(string searchTerm, int page, int pageSize)
+    public async Task<(IEnumerable<PatientEntity>, int)> SearchPatientsAsync(Guid hospitalId, string searchTerm, int page, int pageSize)
     {
         var query = _dbSet
-            .Where(p => p.FirstName.Contains(searchTerm) || p.LastName.Contains(searchTerm) || p.Email.Contains(searchTerm))
+            .Where(p => (p.FirstName.Contains(searchTerm) || p.LastName.Contains(searchTerm) || p.Email.Contains(searchTerm)) &&
+                        p.PatientHospitals.Any(ph => ph.HospitalId == hospitalId))
             .OrderBy(p => p.LastName)
             .ThenBy(p => p.FirstName);
 
@@ -29,27 +30,10 @@ public class PatientsRepository : EntityRepository<PatientEntity, Guid>, IPatien
         return (patients, totalRecords);
     }
 
-    public async Task<(IEnumerable<PatientEntity>, int)> GetPatientsByHospitalAsync(Guid hospitalId, int page, int pageSize)
-    {
-        var query = _dbSet
-            .Include(p => p.PatientHospitals)
-            .Where(p => p.PatientHospitals.Any(ph => ph.HospitalId == hospitalId))
-            .OrderBy(p => p.LastName)
-            .ThenBy(p => p.FirstName);
-
-        var totalRecords = await query.CountAsync();
-        var patients = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return (patients, totalRecords);
-    }
-
-    public async Task<(IEnumerable<VisitEntity>, int)> GetPatientVisitsAsync(Guid patientId, int page, int pageSize)
+    public async Task<(IEnumerable<VisitEntity>, int)> GetPatientVisitsAsync(Guid hospitalId, Guid patientId, int page, int pageSize)
     {
         var visitsQuery = _context.Visits
-            .Where(v => v.PatientHospitals.Any(ph => ph.PatientId == patientId))
+            .Where(v => v.PatientHospitals.Any(ph => ph.PatientId == patientId && ph.HospitalId == hospitalId))
             .OrderBy(v => v.Date);
 
         var totalRecords = await visitsQuery.CountAsync();

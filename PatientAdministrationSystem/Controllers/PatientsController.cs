@@ -14,10 +14,12 @@ namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
     public class PatientsController : ControllerBase
     {
         private readonly IPatientsService _patientsService;
+        private readonly IHospitalService _hospitalService;
 
-        public PatientsController(IPatientsService patientsService)
+        public PatientsController(IPatientsService patientsService, IHospitalService hospitalService)
         {
             _patientsService = patientsService;
+            _hospitalService = hospitalService;
         }
 
         [HttpGet("getpatients")]
@@ -31,7 +33,8 @@ namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
 
             try
             {
-                var (patients, totalRecords) = await _patientsService.SearchPatientsAsync(name, page, pageSize);
+                var hospitalId = _hospitalService.CurrentHospitalId;
+                var (patients, totalRecords) = await _patientsService.SearchPatientsAsync(hospitalId, name, page, pageSize);
                 return Ok(new ApiResponse<IEnumerable<PatientEntity>>(true, "Patients retrieved successfully.", patients, totalRecords));
             }
             catch (Exception ex)
@@ -51,7 +54,8 @@ namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
 
             try
             {
-                var (visits, totalRecords) = await _patientsService.GetPatientVisitsAsync(patientGuid, page, pageSize);
+                var hospitalId = _hospitalService.CurrentHospitalId;
+                var (visits, totalRecords) = await _patientsService.GetPatientVisitsAsync(hospitalId, patientGuid, page, pageSize);
                 return Ok(new ApiResponse<IEnumerable<VisitEntity>>(true, "Patient visits retrieved successfully.", visits, totalRecords));
             }
             catch (Exception ex)

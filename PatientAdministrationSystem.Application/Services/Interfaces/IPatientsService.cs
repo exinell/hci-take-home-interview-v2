@@ -10,7 +10,6 @@ public interface IPatientsService
     Task AddPatientAsync(PatientEntity patient);
     Task UpdatePatientAsync(PatientEntity patient);
     Task DeletePatientAsync(Guid id);
-    Task<(IEnumerable<PatientEntity>, int)> SearchPatientsAsync(string searchTerm, int page, int pageSize);
-    Task<(IEnumerable<PatientEntity>, int)> GetPatientsByHospitalAsync(Guid hospitalId, int page, int pageSize);
-    Task<(IEnumerable<VisitEntity>, int)> GetPatientVisitsAsync(Guid patientId, int page, int pageSize);
+    Task<(IEnumerable<PatientEntity>, int)> SearchPatientsAsync(Guid hospitalId, string searchTerm, int page, int pageSize);
+    Task<(IEnumerable<VisitEntity>, int)> GetPatientVisitsAsync(Guid hospitalId, Guid patientId, int page, int pageSize);
 }

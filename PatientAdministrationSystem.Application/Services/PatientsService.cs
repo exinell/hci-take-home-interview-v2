@@ -39,18 +39,13 @@ public class PatientsService : IPatientsService
         await _patientsRepository.DeleteAsync(id);
     }
 
-    public async Task<(IEnumerable<PatientEntity>, int)> SearchPatientsAsync(string searchTerm, int page, int pageSize)
+    public async Task<(IEnumerable<PatientEntity>, int)> SearchPatientsAsync(Guid hospitalId, string searchTerm, int page, int pageSize)
     {
-        return await _patientsRepository.SearchPatientsAsync(searchTerm,page,pageSize);
+        return await _patientsRepository.SearchPatientsAsync(hospitalId, searchTerm, page,pageSize);
     }
 
-    public async Task<(IEnumerable<PatientEntity>, int)> GetPatientsByHospitalAsync(Guid hospitalId, int page, int pageSize)
+    public async Task<(IEnumerable<VisitEntity>, int)> GetPatientVisitsAsync(Guid hospitalId, Guid patientId, int page, int pageSize)
     {
-        return await _patientsRepository.GetPatientsByHospitalAsync(hospitalId, page, pageSize);
-    }
-
-    public async Task<(IEnumerable<VisitEntity>, int)> GetPatientVisitsAsync(Guid patientId, int page, int pageSize)
-    {
-        return await _patientsRepository.GetPatientVisitsAsync(patientId, page, pageSize);
+        return await _patientsRepository.GetPatientVisitsAsync(hospitalId, patientId, page, pageSize);
     }
 }
