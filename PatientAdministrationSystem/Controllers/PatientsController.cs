@@ -6,9 +6,10 @@ using System;
 
 namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
 {
-    [Route("api/patients")]
+    [Route("api/v{version:apiVersion}/patients")]
     [ApiExplorerSettings(GroupName = "Patients")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class PatientsController : ControllerBase
     {
         private readonly IPatientsService _patientsService;
@@ -19,6 +20,7 @@ namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
         }
 
         [HttpGet("getpatients")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetPatients([FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -38,6 +40,7 @@ namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
         }
 
         [HttpGet("getpatientvisits")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetPatientVisits([FromQuery] string patientId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             if (!Guid.TryParse(patientId, out var patientGuid))

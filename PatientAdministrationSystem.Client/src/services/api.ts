@@ -15,12 +15,14 @@ const handleResponse = <T>(response: AxiosResponse<ApiResponse<T>>): ApiResponse
     }
 };
 
+const apiVersion = 'v1';
+
 export const getPatients = (name: string, page: number, pageSize: number): Promise<ApiResponse<Patient[]>> => {
-    return api.get(`/patients/getpatients`, { params: { name, page, pageSize } })
+    return api.get(`/${apiVersion}/patients/getpatients`, { params: { name, page, pageSize } })
         .then(response => handleResponse<Patient[]>(response));
 };
 
 export const getPatientVisits = (patientId: string, page: number, pageSize: number): Promise<ApiResponse<Visit[]>> => {
-    return api.get(`/patients/getpatientvisits`, { params: { patientId, page, pageSize } })
+    return api.get(`/${apiVersion}/patients/getpatientvisits`, { params: { patientId, page, pageSize } })
         .then(response => handleResponse<Visit[]>(response));
 };
