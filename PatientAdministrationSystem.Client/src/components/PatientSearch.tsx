@@ -4,6 +4,7 @@ import { TextField, List, ListItem, ListItemText, CircularProgress, Container, P
 import { Patient } from '../types/Patient';
 import { ApiResponse } from '../types/ApiResponse';
 import { MESSAGES } from '../constants/general';
+import { sanitizeInput } from '../utils/utils';
 
 interface PatientSearchProps {
     onSelectPatient: (patientId: string) => void;
@@ -21,7 +22,13 @@ const PatientSearch: React.FC<PatientSearchProps> = ({ onSelectPatient }) => {
     const pageSize = 10;
 
     const searchPatients = useCallback(async () => {
-        const cacheKey = `${name}-${page}`;
+        const sanitizedQuery = sanitizeInput(name);
+        if (!sanitizedQuery) {
+            setPatients([]);
+            setTotalRecords(0);
+            return;
+        }
+        const cacheKey = `${sanitizedQuery}-${page}`;
         if (cache[cacheKey]) {
             const cachedData = cache[cacheKey];
             setPatients((prevPatients) => (page === 1 ? cachedData.data : [...prevPatients, ...cachedData.data]));
@@ -32,7 +39,7 @@ const PatientSearch: React.FC<PatientSearchProps> = ({ onSelectPatient }) => {
         setLoading(true);
         setError(null); // Reset error state before making a new request
         try {
-            const response: ApiResponse<Patient[]> = await getPatients(name, page, pageSize);
+            const response: ApiResponse<Patient[]> = await getPatients(sanitizedQuery, page, pageSize);
             if (page === 1) {
                 setPatients(response.data);
             } else {
