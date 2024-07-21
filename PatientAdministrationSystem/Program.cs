@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PatientAdministrationSystem.Application.Entities;
-using PatientAdministrationSystem.Application.Interfaces;
 using PatientAdministrationSystem.Application.Repositories.Interfaces;
 using PatientAdministrationSystem.Application.Services;
+using PatientAdministrationSystem.Application.Services.Interfaces;
 using PatientAdministrationSystem.Infrastructure;
 using PatientAdministrationSystem.Infrastructure.Repositories;
 
@@ -25,6 +25,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IPatientsRepository, PatientsRepository>();
 builder.Services.AddScoped<IPatientsService, PatientsService>();
+
 
 builder.Services.AddDbContext<HciDataContext>(options =>
     options.UseInMemoryDatabase("InMemoryDatabase"));

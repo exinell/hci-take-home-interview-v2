@@ -1,6 +1,16 @@
-namespace PatientAdministrationSystem.Application.Interfaces;
+using PatientAdministrationSystem.Application.Entities;
+using PatientAdministrationSystem.Application.Repositories.Interfaces;
+
+namespace PatientAdministrationSystem.Application.Services.Interfaces;
 
 public interface IPatientsService
 {
-    // Define your service interface here for use in your API and service
+    Task<PatientEntity> GetPatientByIdAsync(Guid id);
+    Task<IEnumerable<PatientEntity>> GetAllPatientsAsync();
+    Task AddPatientAsync(PatientEntity patient);
+    Task UpdatePatientAsync(PatientEntity patient);
+    Task DeletePatientAsync(Guid id);
+    Task<(IEnumerable<PatientEntity>, int)> SearchPatientsAsync(string searchTerm, int page, int pageSize);
+    Task<(IEnumerable<PatientEntity>, int)> GetPatientsByHospitalAsync(Guid hospitalId, int page, int pageSize);
+    Task<(IEnumerable<VisitEntity>, int)> GetPatientVisitsAsync(Guid patientId, int page, int pageSize);
 }
