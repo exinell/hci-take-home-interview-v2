@@ -22,7 +22,21 @@ namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
             _hospitalService = hospitalService;
         }
 
+        /// <summary>
+        /// Retrieves a list of patients based on the provided search criteria.
+        /// </summary>
+        /// <param name="name">The name to search for patients.</param>
+        /// <param name="page">The page number for pagination.</param>
+        /// <param name="pageSize">The number of records per page.</param>
+        /// <returns>A list of patients that match the search criteria.</returns>
+        /// <response code="200">Patients retrieved successfully.</response>
+        /// <response code="400">If the search term is empty or invalid.</response>
+        /// <response code="500">If an internal server error occurs.</response>
         [HttpGet("getpatients")]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<PatientEntity>>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 500)]
+        [Produces("application/json")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetPatients([FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -43,7 +57,21 @@ namespace Hci.Ah.Home.Api.Gateway.Controllers.Patients
             }
         }
 
+        /// <summary>
+        /// Retrieves a list of visits for a specific patient.
+        /// </summary>
+        /// <param name="patientId">The ID of the patient to retrieve visits for.</param>
+        /// <param name="page">The page number for pagination.</param>
+        /// <param name="pageSize">The number of records per page.</param>
+        /// <returns>A list of visits for the specified patient.</returns>
+        /// <response code="200">Patient visits retrieved successfully.</response>
+        /// <response code="400">If the patient ID format is invalid.</response>
+        /// <response code="500">If an internal server error occurs.</response>
         [HttpGet("getpatientvisits")]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<VisitEntity>>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 500)]
+        [Produces("application/json")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetPatientVisits([FromQuery] string patientId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
